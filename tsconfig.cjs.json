@@ -4,5 +4,8 @@
     "module": "CommonJS",
     "outDir": "./dist/cjs",
     "declarationDir": "./types"
-  }
+  },
+  "exclude": [
+    "src/bin.ts"
+  ]
 }

@@ -1,14 +1,16 @@
 {
-  "name": "@j2blasco/ts-package-template",
+  "name": "@j2blasco/ts-boundaries",
   "version": "0.0.1",
-  "description": "Typescript Package Template",
+  "description": "A tool to generate ESLint boundaries configuration from TypeScript boundary definitions",
   "author": "j2blasco",
   "license": "MIT",
   "type": "module",
   "keywords": [
     "typescript",
-    "package",
-    "template"
+    "eslint",
+    "boundaries",
+    "architecture",
+    "code-organization"
   ],
   "publishConfig": {
     "access": "public"
@@ -16,6 +18,9 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./types/index.d.ts",
+  "bin": {
+    "ts-boundaries": "./dist/esm/bin.js"
+  },
   "repository": {
     "type": "git",
     "url": ""
@@ -25,6 +30,10 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js",
       "types": "./types/index.d.ts"
+    },
+    "./cli": {
+      "import": "./dist/esm/cli.js",
+      "require": "./dist/cjs/cli.js"
     }
   },
   "files": [
@@ -34,17 +43,19 @@
     "LICENSE"
   ],
   "scripts": {
-    "boundaries:generate": "npm run script ./scripts/src/generate-eslint-boundaries.ts",
+    "boundaries:generate": "node ./dist/esm/bin.js",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build": "npm run build:cjs && npm run build:esm",
     "lint:fix": "npm run boundaries:generate && eslint src --ext .ts",
     "lint": "npm run boundaries:generate && eslint src --ext .ts",
     "script": "tsx --tsconfig ./scripts/tsconfig.json",
-    "test": "jest"
+    "test": "jest",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "@types/node": "^24.0.13",
     "@typescript-eslint/eslint-plugin": "^8.35.0",
     "@typescript-eslint/parser": "^8.35.0",
     "eslint": "^9.29.0",

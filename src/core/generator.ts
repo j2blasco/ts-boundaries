@@ -127,11 +127,19 @@ async function loadBoundariess(
 }
 
 /**
- * Generate ESLint boundaries configuration
+ * Data structure for passing boundary information to config generation
  */
-export async function generateBoundariesConfig(
+export interface BoundaryData {
+  elements: BoundaryElement[];
+  configs: Map<string, Boundaries>;
+}
+
+/**
+ * Scan and load all boundary files from the file system
+ */
+export async function loadBoundaryData(
   options: GeneratorOptions = {},
-): Promise<string> {
+): Promise<BoundaryData> {
   const projectRoot = options.projectRoot || process.cwd();
   const srcDir = options.srcDir || 'src';
   const srcPath = path.resolve(projectRoot, srcDir);
@@ -141,25 +149,33 @@ export async function generateBoundariesConfig(
   }
 
   const elements = scanForBoundariesFiles(srcPath, srcPath);
+  const configs = await loadBoundariess(srcPath);
+
+  return { elements, configs };
+}
+
+/**
+ * Generate ESLint configuration string from boundary data
+ */
+export function generateESLintConfigFromData(data: BoundaryData): string {
+  const { elements, configs } = data;
 
   // Sort elements by depth (deepest first) to ensure child configs take priority over parent configs
-  elements.sort((a, b) => {
+  const sortedElements = [...elements].sort((a, b) => {
     const depthA = a.folderPath.split('/').length;
     const depthB = b.folderPath.split('/').length;
     return depthB - depthA;
   });
 
-  if (elements.length === 0) {
+  if (sortedElements.length === 0) {
     console.log(
       'No .boundaries.ts files found. Generating empty configuration.',
     );
   }
 
-  const boundariesConfigs = await loadBoundariess(srcPath);
-
   // Update element types with actual names from configs
-  for (const element of elements) {
-    for (const [name, config] of boundariesConfigs) {
+  for (const element of sortedElements) {
+    for (const [name, config] of configs) {
       if (element.folderPath === '' && name === 'root') {
         element.type = name;
         break;
@@ -173,8 +189,8 @@ export async function generateBoundariesConfig(
   const rules: InternalRule[] = [];
   const externalRules: ExternalRule[] = [];
 
-  for (const element of elements) {
-    const config = boundariesConfigs.get(element.type);
+  for (const element of sortedElements) {
+    const config = configs.get(element.type);
     if (config) {
       if (config.internal && config.internal.length > 0) {
         rules.push({
@@ -193,7 +209,7 @@ export async function generateBoundariesConfig(
   }
 
   const boundaryElementsSection = `'boundaries/elements': [
-${elements
+${sortedElements
   .map(
     (element) =>
       `        { type: '${element.type}', pattern: '${element.pattern}' }`,
@@ -261,6 +277,16 @@ export default [
 }
 
 /**
+ * Generate ESLint boundaries configuration
+ */
+export async function generateBoundariesConfig(
+  options: GeneratorOptions = {},
+): Promise<string> {
+  const data = await loadBoundaryData(options);
+  return generateESLintConfigFromData(data);
+}
+
+/**
  * Generate and write ESLint boundaries configuration to file
  */
 export async function generateBoundariesConfigFile(
@@ -278,9 +304,6 @@ export async function generateBoundariesConfigFile(
     fs.writeFileSync(outputPath, config, 'utf8');
 
     console.log(`ESLint boundaries configuration generated: ${outputPath}`);
-    console.log(
-      'Configuration is idempotent and will overwrite existing file.',
-    );
   } catch (error) {
     console.error('Error generating ESLint configuration:', error);
     throw error;

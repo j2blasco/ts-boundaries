@@ -1,9 +1,9 @@
-import type { Boundaries } from './boundaries.types';
+import type { Boundaries } from './core/boundaries.types';
 
 const boundaries: Boundaries = {
   name: 'root',
   internal: [],
-  external: ['fs', 'path', 'url', 'child_process', '@types/*'],
+  external: ['fs', 'path', 'url', 'util', 'child_process', '@types/*'],
 };
 
 export default boundaries;

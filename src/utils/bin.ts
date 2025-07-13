@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 // This is a wrapper script that automatically uses tsx to handle TypeScript files
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';

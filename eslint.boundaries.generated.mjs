@@ -20,7 +20,7 @@ export default [
         {
           default: 'disallow',
           rules: [
-            { from: 'root', allow: ['fs', 'path', 'url', 'child_process', '@types/*'] }
+            { from: 'root', allow: ['fs', 'path', 'url', 'util', 'child_process', '@types/*'] }
           ]
         }
       ],

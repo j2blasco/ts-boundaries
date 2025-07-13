@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { generateBoundariesConfigFile } from './generator.js';
+import { generateBoundariesConfigFile } from '../core/generator.js';
 
 async function main() {
   try {

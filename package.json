@@ -1,6 +1,6 @@
 {
   "name": "@j2blasco/ts-boundaries",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A tool to generate ESLint boundaries configuration from TypeScript boundary definitions",
   "author": "j2blasco",
   "license": "MIT",

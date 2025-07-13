@@ -78,20 +78,6 @@ export default [
 ];
 ```
 
-## Programmatic API
-
-You can also use the package programmatically:
-
-```typescript
-import { generateBoundariesConfigFile } from '@j2blasco/ts-boundaries';
-
-await generateBoundariesConfigFile({
-  projectRoot: '/path/to/project',
-  srcDir: 'src',
-  outputPath: 'custom-boundaries.mjs'
-});
-```
-
 ## Boundary File Format
 
 Each `.boundaries.ts` file should export a default object with the following structure:

@@ -15,11 +15,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./types/index.d.ts",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
   "bin": {
-    "ts-boundaries": "./dist/esm/utils/bin.js"
+    "ts-boundaries": "tsx ./src/utils/cli.ts"
   },
   "repository": {
     "type": "git",
@@ -27,26 +27,26 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./types/index.d.ts"
+      "import": "./src/index.ts",
+      "require": "./src/index.ts",
+      "types": "./src/index.ts"
     }
   },
   "files": [
-    "dist",
-    "types",
+    "src",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "boundaries:generate": "node ./dist/esm/utils/bin.js",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build": "npm run build:esm",
+    "boundaries:generate": "tsx ./src/utils/cli.ts",
     "lint:fix": "npm run boundaries:generate && eslint src --ext .ts",
     "lint": "npm run boundaries:generate && eslint src --ext .ts",
     "script": "tsx --tsconfig ./scripts/tsconfig.json",
-    "test": "jest",
-    "prepublishOnly": "npm run build"
+    "test": "jest"
+  },
+  "dependencies": {
+    "tsx": "^4.20.3",
+    "typescript": "~5.7.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
@@ -60,8 +60,6 @@
     "eslint-plugin-prettier": "^5.5.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.3.2",
-    "tsconfig-paths": "^4.2.0",
-    "tsx": "^4.20.3",
-    "typescript": "~5.7.2"
+    "tsconfig-paths": "^4.2.0"
   }
 }
